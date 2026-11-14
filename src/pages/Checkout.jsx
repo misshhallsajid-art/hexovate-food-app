@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCartStore } from '../store/useCartStore';
 import { DELIVERY_FEE } from '../utils/cart';
-import { placeOrder } from '../orderStore'; // Fixed path for orderStore
+import { placeOrder } from '../orderStore';
 
 const FIELDS = [
   { name: 'name', label: 'Full name', type: 'text', placeholder: 'e.g. Ayesha Khan', autoComplete: 'name' },
@@ -25,7 +25,7 @@ export default function Checkout() {
   const cart = useCartStore((state) => state.cart);
   const clearCart = useCartStore((state) => state.clearCart);
 
-  const [values, setValues] = useState({ name: '', phone: '', address: '' });
+  const [values, setValues] = useState({ name: '', phone: '', address: '', notes: '' });
   const [touched, setTouched] = useState({});
 
   const subtotal = cart.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
@@ -56,6 +56,7 @@ export default function Checkout() {
         customerName: values.name,
         phone: values.phone,
         address: values.address,
+        notes: values.notes.trim(),
         items: orderItems,
         total: total
       });
@@ -74,19 +75,21 @@ export default function Checkout() {
     }`;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10">
-      <h1 className="text-4xl font-black text-ink mb-2">Checkout</h1>
-      <p className="text-muted leading-relaxed mb-6 max-w-xl">Enter your contact details and delivery address below. This is a demo, so nothing is charged and nothing is delivered, but the form checks your details just like a real one would.</p>
+    <div className="max-w-2xl mx-auto px-5 sm:px-6 py-8 sm:py-10">
+      <h1 className="text-3xl sm:text-4xl font-black text-ink mb-2">Checkout</h1>
+      <p className="text-muted text-sm sm:text-base leading-relaxed mb-6 max-w-xl">
+        Enter your contact details and delivery address below.
+      </p>
 
       <div className="bg-soft rounded-xl p-5 mb-6 text-sm space-y-1">
         <div className="flex justify-between"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-        <div className="flex justify-between"><span>Delivery fee (demo)</span><span>${DELIVERY_FEE.toFixed(2)}</span></div>
+        <div className="flex justify-between"><span>Delivery fee</span><span>${DELIVERY_FEE.toFixed(2)}</span></div>
         <div className="flex justify-between font-bold text-base text-ink border-t border-accent/30 pt-2 mt-2">
           <span>Total</span><span>${total.toFixed(2)}</span>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} noValidate className="bg-surface p-6 rounded-xl border border-line shadow-soft space-y-5">
+      <form onSubmit={handleSubmit} noValidate className="bg-surface p-5 sm:p-6 rounded-xl border border-line shadow-soft space-y-5">
         {FIELDS.map((f) => {
           const showError = touched[f.name] && errors[f.name];
           const common = {
@@ -116,10 +119,25 @@ export default function Checkout() {
           );
         })}
 
-        <button type="submit" className="w-full bg-accent text-white py-4 rounded-lg font-extrabold shadow-sm hover:opacity-90 transition">
-          Place Order (Demo)
+        {/* Optional Order / Cooking Instructions */}
+        <div>
+          <label htmlFor="notes" className="block text-sm font-semibold mb-1 text-body">
+            📝 Cooking / Delivery Instructions (Optional)
+          </label>
+          <textarea
+            id="notes"
+            name="notes"
+            rows="2"
+            placeholder="e.g. Extra spicy, no onions, ring the doorbell..."
+            value={values.notes}
+            onChange={(e) => setValues({ ...values, notes: e.target.value })}
+            className="w-full p-3 rounded-xl border border-line focus:outline-none focus:ring-2 focus:ring-accent"
+          />
+        </div>
+
+        <button type="submit" className="w-full bg-accent text-white py-4 rounded-xl font-extrabold shadow-sm hover:opacity-90 transition">
+          Place Order &rarr;
         </button>
-        <p className="text-xs text-muted text-center">Demo only. No real payment is taken and no real order is placed.</p>
       </form>
     </div>
   );

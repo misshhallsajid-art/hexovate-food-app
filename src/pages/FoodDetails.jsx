@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import dishes from '../data/dishes';
-import ProductViewer3D from '../components/ProductViewer3D';
-import ReviewSection from '../components/ReviewSection'; // Added ReviewSection import
+import ReviewSection from '../components/ReviewSection';
 import { getUnitPrice } from '../utils/cart';
 
 export default function FoodDetails() {
@@ -24,7 +23,6 @@ export default function FoodDetails() {
     );
   }
 
-  // First portion (Regular) is selected until the visitor picks another one
   const sizeLabel = selectedSize ?? dish.sizeOptions[0].label;
   const price = getUnitPrice(dish, sizeLabel, []);
 
@@ -42,7 +40,17 @@ export default function FoodDetails() {
       </Link>
 
       <div className="bg-surface rounded-xl border border-line shadow-soft overflow-hidden grid md:grid-cols-2">
-        <ProductViewer3D image={dish.image} name={dish.name} glbUrl={dish.glbUrl} />
+        {/* Clean High-Resolution Food Image (Replaced 3D Viewer) */}
+        <div
+          className="flex items-center justify-center p-6 md:p-10 min-h-[20rem]"
+          style={{ backgroundColor: dish.tint || '#f8f5f0' }}
+        >
+          <img
+            src={dish.image}
+            alt={dish.name}
+            className="w-full h-72 md:h-96 object-cover rounded-2xl shadow-md"
+          />
+        </div>
 
         <div className="p-8 md:p-10 flex flex-col justify-between">
           <div>
