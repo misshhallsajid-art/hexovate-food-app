@@ -31,11 +31,10 @@ export default function Home() {
   return (
     <div className="bg-white min-h-screen pb-24 font-sans overflow-x-hidden">
       {/* HERO SECTION */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-8 pt-8 pb-12 md:py-16 grid md:grid-cols-12 items-center gap-8 lg:gap-12">
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-10 md:py-16 grid md:grid-cols-12 items-center gap-8 lg:gap-12">
         
         {/* Left Side: Rating Badge, Title, Description & CTA */}
-        <div className="md:col-span-6 space-y-5 text-left z-10">
-          {/* Catchy Rating Badge Added Here */}
+        <div className="md:col-span-6 space-y-4 sm:space-y-5 text-left z-10">
           <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200/60 px-3.5 py-1.5 rounded-full shadow-sm">
             <div className="flex items-center text-amber-500 text-xs gap-0.5">
               <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
@@ -63,18 +62,18 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Right Side: Orange Backdrop with Circular Dish Previews Side-by-Side */}
-        <div className="md:col-span-6 relative flex justify-center items-center py-6">
-          {/* Large Curved Orange Backdrop */}
-          <div className="absolute w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] lg:w-[420px] lg:h-[420px] bg-[#FF9B42] rounded-full -z-0 opacity-90" />
+        {/* Right Side: Perfect Circle Orange Backdrop with Unstrethed Dish Previews */}
+        <div className="md:col-span-6 relative flex justify-center items-center py-4">
+          {/* Perfect Circle Orange Backdrop */}
+          <div className="absolute aspect-square w-[280px] sm:w-[360px] lg:w-[400px] bg-[#FF9B42] rounded-full -z-0 opacity-90 m-auto inset-0" />
 
-          {/* Circular Dish Showcase Cluster */}
-          <div className="relative z-10 w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[380px] lg:h-[380px] flex items-center justify-center">
+          {/* Circular Dish Showcase Cluster (Strict Square Container) */}
+          <div className="relative z-10 w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[380px] lg:h-[380px] shrink-0 flex items-center justify-center aspect-square">
             
             {/* Center Main Dish (Salmon Bowl) */}
             <Link
               to={`/food/${salmonDish.id}`}
-              className="absolute w-36 h-36 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-2xl hover:scale-105 transition-transform duration-300 z-20 bg-white"
+              className="absolute w-32 h-32 sm:w-44 sm:h-44 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-2xl hover:scale-105 transition-transform duration-300 z-20 bg-white aspect-square shrink-0"
             >
               <img
                 src={salmonDish.image}
@@ -87,7 +86,7 @@ export default function Home() {
             {sideDishes[0] && (
               <Link
                 to={`/food/${sideDishes[0].id}`}
-                className="absolute top-2 right-6 sm:right-10 w-16 h-16 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
+                className="absolute top-2 right-4 sm:right-8 w-14 h-14 sm:w-18 sm:h-18 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
               >
                 <img
                   src={sideDishes[0].image}
@@ -101,7 +100,7 @@ export default function Home() {
             {sideDishes[1] && (
               <Link
                 to={`/food/${sideDishes[1].id}`}
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-18 h-18 sm:w-24 sm:h-24 lg:w-26 lg:h-26 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-16 h-16 sm:w-22 sm:h-22 lg:w-26 lg:h-26 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
               >
                 <img
                   src={sideDishes[1].image}
@@ -115,7 +114,7 @@ export default function Home() {
             {sideDishes[2] && (
               <Link
                 to={`/food/${sideDishes[2].id}`}
-                className="absolute bottom-2 left-8 sm:left-12 w-16 h-16 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
+                className="absolute bottom-2 left-6 sm:left-10 w-14 h-14 sm:w-18 sm:h-18 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
               >
                 <img
                   src={sideDishes[2].image}
@@ -129,7 +128,7 @@ export default function Home() {
             {sideDishes[3] && (
               <Link
                 to={`/food/${sideDishes[3].id}`}
-                className="absolute left-0 top-1/3 w-14 h-14 sm:w-18 sm:h-18 lg:w-20 lg:h-20 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
+                className="absolute left-0 top-1/3 w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
               >
                 <img
                   src={sideDishes[3].image}
