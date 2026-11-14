@@ -1,238 +1,185 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { gsap } from 'gsap';
-import { Utensils, SlidersHorizontal, ShoppingBag, Flame, Clock, Star, Sparkles } from 'lucide-react';
-import FoodCard from '../components/FoodCard';
+import { useCartStore } from '../store/useCartStore';
 import dishes from '../data/dishes';
-
-const steps = [
-  { icon: Utensils, title: 'Explore Menu', text: 'Handcrafted gourmet meals' },
-  { icon: SlidersHorizontal, title: 'Customize It', text: 'Choose portion & toppings' },
-  { icon: ShoppingBag, title: 'Fast Delivery', text: 'Track live from kitchen' },
-];
-
-const categories = [
-  { name: 'Burgers', emoji: '🍔', tag: 'Best Seller' },
-  { name: 'Pasta', emoji: '🍝', tag: 'Creamy' },
-  { name: 'Sushi', emoji: '🍣', tag: 'Fresh' },
-  { name: 'Bowls', emoji: '🥗', tag: 'Healthy' },
-  { name: 'Indian', emoji: '🍛', tag: 'Spicy' },
-];
+import FoodCard from '../components/FoodCard';
 
 export default function Home() {
   const { hash } = useLocation();
-  const heroRef = useRef(null);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const cart = useCartStore((state) => state.cart);
 
-  useLayoutEffect(() => {
-    const mm = gsap.matchMedia();
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const inHero = gsap.utils.selector(heroRef);
-      gsap.from(inHero('[data-hero-item]'), {
-        y: 24,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        stagger: 0.1,
-      });
-    });
-    return () => mm.revert();
-  }, []);
+  const salmonDish =
+    dishes.find((d) => d.name.toLowerCase().includes('salmon') || d.name.toLowerCase().includes('bowl')) ||
+    dishes[0];
+  
+  const otherDishes = dishes.filter((d) => d.id !== salmonDish.id);
+  const sideDishes = otherDishes.slice(0, 4);
 
   useEffect(() => {
     if (!hash) return;
     const el = document.getElementById(hash.slice(1));
-    if (el) {
-      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
-    }
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   }, [hash]);
 
+  const categories = ['All', ...new Set(dishes.map((d) => d.category))];
+  const visibleDishes =
+    selectedCategory === 'All'
+      ? dishes
+      : dishes.filter((d) => d.category === selectedCategory);
+
   return (
-    <div className="overflow-x-hidden">
-      {/* 1. Full-Bleed Restaurant Hero Banner (Zero Square Boxes!) */}
-      <section ref={heroRef} className="relative bg-neutral-950 text-white overflow-hidden">
-        {/* Background Atmospheric Food Image */}
-        <img
-          src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1600&q=85"
-          alt="Flame grilled gourmet burger"
-          className="absolute inset-0 w-full h-full object-cover object-center opacity-50 scale-105"
-        />
-        {/* Smooth Dark Gradient Overlay so text pops clearly on mobile & desktop */}
-        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/70 to-black/40 md:bg-gradient-to-r md:from-neutral-950 md:via-neutral-950/80 md:to-transparent" />
-
-        <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-6 py-16 sm:py-24 md:py-32">
-          <div className="max-w-2xl text-center md:text-left">
-            <div
-              data-hero-item
-              className="inline-flex items-center gap-2 bg-accent/20 border border-accent/40 text-accent rounded-full px-4 py-1.5 text-xs font-extrabold tracking-widest uppercase mb-5 backdrop-blur-sm"
-            >
-              <Flame className="w-3.5 h-3.5" />
-              <span>Hexovate Kitchen &middot; Flame-Grilled Fresh</span>
+    <div className="bg-white min-h-screen pb-24 font-sans overflow-x-hidden">
+      {/* HERO SECTION */}
+      <section className="relative max-w-7xl mx-auto px-4 sm:px-8 pt-8 pb-12 md:py-16 grid md:grid-cols-12 items-center gap-8 lg:gap-12">
+        
+        {/* Left Side: Rating Badge, Title, Description & CTA */}
+        <div className="md:col-span-6 space-y-5 text-left z-10">
+          {/* Catchy Rating Badge Added Here */}
+          <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200/60 px-3.5 py-1.5 rounded-full shadow-sm">
+            <div className="flex items-center text-amber-500 text-xs gap-0.5">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
             </div>
-
-            <h1
-              data-hero-item
-              className="font-display text-4xl sm:text-6xl md:text-7xl font-black leading-[1.03] tracking-tight mb-5"
-            >
-              Bold Flavors.{' '}
-              <span className="text-accent block sm:inline">Crafted Hot.</span>
-            </h1>
-
-            <p
-              data-hero-item
-              className="text-gray-200 text-base sm:text-lg max-w-lg mx-auto md:mx-0 mb-8 leading-relaxed"
-            >
-              Bite into juicy handcrafted burgers, sizzling bowls, and custom platters made fresh to order and delivered straight to your doorstep in 25 minutes.
-            </p>
-
-            {/* Primary CTA Buttons */}
-            <div data-hero-item className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 sm:gap-4 mb-10">
-              <Link
-                to="/menu"
-                className="bg-accent text-white px-5 sm:px-8 py-4 rounded-full text-sm sm:text-base font-extrabold shadow-glow hover:opacity-90 transition text-center"
-              >
-                Explore Menu &rarr;
-              </Link>
-              <Link
-                to="/combo"
-                className="bg-white/10 backdrop-blur-md border border-white/25 text-white px-5 sm:px-8 py-4 rounded-full text-sm sm:text-base font-bold hover:bg-white hover:text-ink transition text-center"
-              >
-                🍱 Build Combo
-              </Link>
-            </div>
-
-            {/* Sleek Trust Indicators */}
-            <div
-              data-hero-item
-              className="flex flex-wrap items-center justify-center md:justify-start gap-6 text-xs sm:text-sm font-bold text-gray-300 pt-4 border-t border-white/15"
-            >
-              <span className="flex items-center gap-1.5">
-                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                4.9 Customer Rating
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-accent" />
-                25-Min Express Delivery
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-accent" />
-                15% Off Combos
-              </span>
-            </div>
+            <span className="text-xs font-bold text-[#111111]">4.5 (5k+ Reviews)</span>
           </div>
-        </div>
-      </section>
 
-      {/* 2. Browse by Category Strip */}
-      <section className="bg-soft border-b border-line py-8">
-        <div className="max-w-6xl mx-auto px-5 sm:px-6">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg sm:text-xl font-black text-ink">What are you craving?</h2>
-            <Link to="/menu" className="text-xs sm:text-sm font-bold text-accent hover:underline">
-              All Categories &rarr;
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-[3.2rem] font-black text-[#111111] leading-[1.1] tracking-tight">
+            Discover Our Delectable
+            <br />
+            <span className="text-[#FF8A2B]">Delights Menu</span>
+          </h1>
+
+          <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-lg">
+            Experience freshly crafted gourmet burgers, bowls, and pastas prepared with premium ingredients and delivered piping hot to your doorstep.
+          </p>
+
+          <div className="pt-2">
+            <Link
+              to="/menu"
+              className="inline-block bg-[#FF8A2B] text-white text-base font-extrabold px-8 py-3.5 rounded-2xl shadow-glow hover:opacity-95 transition"
+            >
+              Order now
             </Link>
           </div>
+        </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 sm:gap-4">
-            {categories.map((cat) => (
+        {/* Right Side: Orange Backdrop with Circular Dish Previews Side-by-Side */}
+        <div className="md:col-span-6 relative flex justify-center items-center py-6">
+          {/* Large Curved Orange Backdrop */}
+          <div className="absolute w-[280px] h-[280px] sm:w-[380px] sm:h-[380px] lg:w-[420px] lg:h-[420px] bg-[#FF9B42] rounded-full -z-0 opacity-90" />
+
+          {/* Circular Dish Showcase Cluster */}
+          <div className="relative z-10 w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[380px] lg:h-[380px] flex items-center justify-center">
+            
+            {/* Center Main Dish (Salmon Bowl) */}
+            <Link
+              to={`/food/${salmonDish.id}`}
+              className="absolute w-36 h-36 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-2xl hover:scale-105 transition-transform duration-300 z-20 bg-white"
+            >
+              <img
+                src={salmonDish.image}
+                alt={salmonDish.name}
+                className="w-full h-full object-cover"
+              />
+            </Link>
+
+            {/* Side Dish 1 (Top) */}
+            {sideDishes[0] && (
               <Link
-                key={cat.name}
-                to="/menu"
-                className="bg-surface border border-line rounded-2xl p-4 flex items-center gap-3 hover:border-accent hover:shadow-soft transition group"
+                to={`/food/${sideDishes[0].id}`}
+                className="absolute top-2 right-6 sm:right-10 w-16 h-16 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
               >
-                <span className="text-2xl sm:text-3xl group-hover:scale-110 transition-transform">
-                  {cat.emoji}
-                </span>
-                <div>
-                  <p className="font-extrabold text-sm text-ink">{cat.name}</p>
-                  <p className="text-[11px] text-muted font-medium">{cat.tag}</p>
-                </div>
+                <img
+                  src={sideDishes[0].image}
+                  alt={sideDishes[0].name}
+                  className="w-full h-full object-cover"
+                />
               </Link>
+            )}
+
+            {/* Side Dish 2 (Right) */}
+            {sideDishes[1] && (
+              <Link
+                to={`/food/${sideDishes[1].id}`}
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-18 h-18 sm:w-24 sm:h-24 lg:w-26 lg:h-26 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
+              >
+                <img
+                  src={sideDishes[1].image}
+                  alt={sideDishes[1].name}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            )}
+
+            {/* Side Dish 3 (Bottom) */}
+            {sideDishes[2] && (
+              <Link
+                to={`/food/${sideDishes[2].id}`}
+                className="absolute bottom-2 left-8 sm:left-12 w-16 h-16 sm:w-20 sm:h-20 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
+              >
+                <img
+                  src={sideDishes[2].image}
+                  alt={sideDishes[2].name}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            )}
+
+            {/* Side Dish 4 (Left) */}
+            {sideDishes[3] && (
+              <Link
+                to={`/food/${sideDishes[3].id}`}
+                className="absolute left-0 top-1/3 w-14 h-14 sm:w-18 sm:h-18 lg:w-20 lg:h-20 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white"
+              >
+                <img
+                  src={sideDishes[3].image}
+                  alt={sideDishes[3].name}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            )}
+
+          </div>
+        </div>
+
+      </section>
+
+      {/* OUR FOOD MENU SECTION */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-8 pb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div>
+            <h2 className="font-display text-2xl sm:text-4xl font-black text-[#111111] mb-2">
+              Our Food Menu
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base max-w-md">
+              Explore our handcrafted selection made fresh daily with premium ingredients.
+            </p>
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="flex flex-wrap gap-2.5 overflow-x-auto pb-2 no-scrollbar" role="group" aria-label="Filter dishes">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-5 py-2.5 rounded-2xl font-bold text-xs sm:text-sm whitespace-nowrap transition ${
+                  selectedCategory === cat
+                    ? 'bg-[#FF8A2B] text-white shadow-md'
+                    : 'bg-white border border-gray-200 text-[#111111] hover:border-[#FF8A2B]'
+                }`}
+              >
+                {cat}
+              </button>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* 3. Popular Right Now (Menu Grid) */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-6 py-14">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-extrabold uppercase tracking-wider text-accent">
-              Most Ordered
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-ink mt-1">Popular right now</h2>
-          </div>
-          <Link
-            to="/menu"
-            className="text-sm font-bold text-accent underline underline-offset-4 hover:opacity-80"
-          >
-            See the full menu
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {dishes.map((dish) => (
+        {/* Food Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
+          {visibleDishes.map((dish) => (
             <FoodCard key={dish.id} dish={dish} />
           ))}
-        </div>
-      </section>
-
-      {/* 4. Combo Deal Promo Banner */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-6 pb-14">
-        <div className="bg-ink text-white rounded-3xl p-7 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-soft">
-          <div className="text-center md:text-left space-y-2">
-            <span className="inline-flex items-center gap-1.5 bg-accent text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase">
-              <Sparkles className="w-3.5 h-3.5" /> Save 15% Today
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black">
-              🍱 Build Your Own Meal Platter
-            </h2>
-            <p className="text-gray-300 text-sm sm:text-base max-w-xl">
-              Pair any signature main dish with crispy fries or garlic bread and a chilled drink — get an instant 15% combo discount.
-            </p>
-          </div>
-          <Link
-            to="/combo"
-            className="bg-accent text-white font-extrabold px-7 py-4 rounded-full hover:opacity-90 transition whitespace-nowrap shadow-md"
-          >
-            Create My Combo &rarr;
-          </Link>
-        </div>
-      </section>
-
-      {/* 5. How It Works */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-6 pb-16">
-        <ol className="grid sm:grid-cols-3 gap-4 sm:gap-5">
-          {steps.map(({ icon: Icon, title, text }, i) => (
-            <li
-              key={title}
-              className="bg-surface border border-line rounded-2xl p-5 sm:p-6 shadow-soft flex items-center gap-4"
-            >
-              <span className="w-12 h-12 shrink-0 rounded-2xl bg-accent/10 text-accent flex items-center justify-center">
-                <Icon className="w-6 h-6" aria-hidden="true" />
-              </span>
-              <div>
-                <p className="text-xs font-bold text-muted">0{i + 1}</p>
-                <h3 className="text-base sm:text-lg font-extrabold text-ink leading-tight">{title}</h3>
-                <p className="text-sm text-muted">{text}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* Footer Strip */}
-      <section id="about" className="scroll-mt-24 bg-soft border-t border-line">
-        <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-body">
-          <p className="font-bold text-ink">🍔 HEXOVATE Food</p>
-          <p className="text-center">
-            Crafted with React &amp; Tailwind CSS. Fresh flavors, fast delivery.
-          </p>
-          <div className="flex items-center gap-4 font-semibold text-muted">
-            <span className="flex items-center gap-1">
-              <Clock className="w-4 h-4 text-accent" /> 25m Delivery
-            </span>
-          </div>
         </div>
       </section>
     </div>
