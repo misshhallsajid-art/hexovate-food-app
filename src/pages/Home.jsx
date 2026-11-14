@@ -33,8 +33,87 @@ export default function Home() {
       {/* HERO SECTION */}
       <section className="relative max-w-7xl mx-auto px-4 sm:px-8 pt-6 pb-10 md:py-16 grid md:grid-cols-12 items-center gap-8 lg:gap-12">
         
-        {/* Left Side: Rating Badge, Title, Description & CTA */}
-        <div className="md:col-span-6 space-y-4 sm:space-y-5 text-left z-10">
+        {/* Right Side Preview Cluster (Appears ON TOP on Mobile via order-1, on Right on Desktop via md:order-2) */}
+        <div className="md:col-span-6 order-1 md:order-2 relative flex justify-center items-center py-4">
+          {/* Perfect Circle Orange Backdrop */}
+          <div className="absolute aspect-square w-[250px] sm:w-[340px] lg:w-[400px] bg-[#FF9B42] rounded-full -z-0 opacity-90 m-auto inset-0" />
+
+          {/* Circular Dish Showcase Cluster */}
+          <div className="relative z-10 w-[250px] h-[250px] sm:w-[330px] sm:h-[330px] lg:w-[380px] lg:h-[380px] shrink-0 flex items-center justify-center aspect-square">
+            
+            {/* Center Main Dish (Salmon Bowl) */}
+            <Link
+              to={`/food/${salmonDish.id}`}
+              className="absolute w-28 h-28 sm:w-40 sm:h-40 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-2xl hover:scale-105 transition-transform duration-300 z-20 bg-white aspect-square shrink-0"
+            >
+              <img
+                src={salmonDish.image}
+                alt={salmonDish.name}
+                className="w-full h-full object-cover"
+              />
+            </Link>
+
+            {/* Side Dish 1 (Top) */}
+            {sideDishes[0] && (
+              <Link
+                to={`/food/${sideDishes[0].id}`}
+                className="absolute top-1 right-3 sm:right-6 w-12 h-12 sm:w-16 sm:h-16 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
+              >
+                <img
+                  src={sideDishes[0].image}
+                  alt={sideDishes[0].name}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            )}
+
+            {/* Side Dish 2 (Right) */}
+            {sideDishes[1] && (
+              <Link
+                to={`/food/${sideDishes[1].id}`}
+                className="absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 sm:w-20 sm:h-20 lg:w-26 lg:h-26 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
+              >
+                <img
+                  src={sideDishes[1].image}
+                  alt={sideDishes[1].name}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            )}
+
+            {/* Side Dish 3 (Bottom) */}
+            {sideDishes[2] && (
+              <Link
+                to={`/food/${sideDishes[2].id}`}
+                className="absolute bottom-1 left-6 sm:left-8 w-12 h-12 sm:w-16 sm:h-16 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
+              >
+                <img
+                  src={sideDishes[2].image}
+                  alt={sideDishes[2].name}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            )}
+
+            {/* Side Dish 4 (Left) */}
+            {sideDishes[3] && (
+              <Link
+                to={`/food/${sideDishes[3].id}`}
+                className="absolute left-0 top-1/3 w-10 h-10 sm:w-14 sm:h-14 lg:w-20 lg:h-20 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
+              >
+                <img
+                  src={sideDishes[3].image}
+                  alt={sideDishes[3].name}
+                  className="w-full h-full object-cover"
+                />
+              </Link>
+            )}
+
+          </div>
+        </div>
+
+        {/* Left Side Text Content (Appears BELOW preview on Mobile via order-2, on Left on Desktop via md:order-1) */}
+        <div className="md:col-span-6 order-2 md:order-1 space-y-4 sm:space-y-5 text-left z-10">
           <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-200/60 px-3.5 py-1.5 rounded-full shadow-sm">
             <div className="flex items-center text-amber-500 text-xs gap-0.5">
               <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
@@ -59,85 +138,6 @@ export default function Home() {
             >
               Order now
             </Link>
-          </div>
-        </div>
-
-        {/* Right Side: Perfect Circle Orange Backdrop with Unstrethed Dish Previews */}
-        <div className="md:col-span-6 relative flex justify-center items-center py-4">
-          {/* Perfect Circle Orange Backdrop */}
-          <div className="absolute aspect-square w-[280px] sm:w-[360px] lg:w-[400px] bg-[#FF9B42] rounded-full -z-0 opacity-90 m-auto inset-0" />
-
-          {/* Circular Dish Showcase Cluster (Strict Square Container) */}
-          <div className="relative z-10 w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[380px] lg:h-[380px] shrink-0 flex items-center justify-center aspect-square">
-            
-            {/* Center Main Dish (Salmon Bowl) */}
-            <Link
-              to={`/food/${salmonDish.id}`}
-              className="absolute w-32 h-32 sm:w-44 sm:h-44 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-2xl hover:scale-105 transition-transform duration-300 z-20 bg-white aspect-square shrink-0"
-            >
-              <img
-                src={salmonDish.image}
-                alt={salmonDish.name}
-                className="w-full h-full object-cover"
-              />
-            </Link>
-
-            {/* Side Dish 1 (Top) */}
-            {sideDishes[0] && (
-              <Link
-                to={`/food/${sideDishes[0].id}`}
-                className="absolute top-2 right-4 sm:right-8 w-14 h-14 sm:w-18 sm:h-18 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
-              >
-                <img
-                  src={sideDishes[0].image}
-                  alt={sideDishes[0].name}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            )}
-
-            {/* Side Dish 2 (Right) */}
-            {sideDishes[1] && (
-              <Link
-                to={`/food/${sideDishes[1].id}`}
-                className="absolute right-0 top-1/2 -translate-y-1/2 w-16 h-16 sm:w-22 sm:h-22 lg:w-26 lg:h-26 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
-              >
-                <img
-                  src={sideDishes[1].image}
-                  alt={sideDishes[1].name}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            )}
-
-            {/* Side Dish 3 (Bottom) */}
-            {sideDishes[2] && (
-              <Link
-                to={`/food/${sideDishes[2].id}`}
-                className="absolute bottom-2 left-6 sm:left-10 w-14 h-14 sm:w-18 sm:h-18 lg:w-22 lg:h-22 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
-              >
-                <img
-                  src={sideDishes[2].image}
-                  alt={sideDishes[2].name}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            )}
-
-            {/* Side Dish 4 (Left) */}
-            {sideDishes[3] && (
-              <Link
-                to={`/food/${sideDishes[3].id}`}
-                className="absolute left-0 top-1/3 w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-4 border-white shadow-xl hover:scale-110 transition-transform duration-300 z-30 bg-white aspect-square shrink-0"
-              >
-                <img
-                  src={sideDishes[3].image}
-                  alt={sideDishes[3].name}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            )}
-
           </div>
         </div>
 
