@@ -1,40 +1,23 @@
-import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop'; // <-- Import here
 import Home from './pages/Home';
 import Menu from './pages/Menu';
 import FoodDetails from './pages/FoodDetails';
+import Customization from './pages/Customization';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Confirmation from './pages/Confirmation';
-import Customization from './pages/Customization';
-
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-  return null;
-}
-
-function NotFound() {
-  return (
-    <div className="max-w-xl mx-auto my-16 text-center p-8 bg-surface rounded-3xl border border-line shadow-soft">
-      <h1 className="text-3xl font-black text-ink mb-2">Page not found</h1>
-      <p className="text-muted mb-5">We could not find that page.</p>
-      <Link to="/" className="text-accent font-semibold hover:underline">
-        &larr; Back to Home
-      </Link>
-    </div>
-  );
-}
+import ComboBuilder from './pages/ComboBuilder';
+import AdminPanel from './AdminPanel';
+import Login from './pages/Login';
 
 export default function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <div className="flex flex-col min-h-screen bg-paper text-ink">
+      <ScrollToTop /> {/* <-- Place right inside Router */}
+      <div className="min-h-screen flex flex-col bg-white text-[#111111]">
         <Navbar />
         <main className="flex-grow">
           <Routes>
@@ -45,7 +28,9 @@ export default function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/confirmation" element={<Confirmation />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/combo" element={<ComboBuilder />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
         <Footer />

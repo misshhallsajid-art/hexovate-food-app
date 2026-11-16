@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ShoppingBag, Shield } from 'lucide-react';
+import { Menu as MenuIcon, X, ShoppingBag, Shield, User } from 'lucide-react';
 import { useCartStore } from '../store/useCartStore';
 import TableReservationModal from './TableReservationModal';
 
@@ -15,7 +15,7 @@ export default function Navbar() {
     <>
       <header className="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
-          {/* Brand Logo - Hexovate Food */}
+          {/* Brand Logo */}
           <Link
             to="/"
             onClick={() => setMobileOpen(false)}
@@ -50,8 +50,8 @@ export default function Navbar() {
             </button>
           </nav>
 
-          {/* Right Controls: Cart + Admin Panel + Mobile Hamburger */}
-          <div className="flex items-center gap-2 sm:gap-3.5">
+          {/* Right Controls */}
+          <div className="flex items-center gap-2 sm:gap-3">
             {/* Cart Button */}
             <Link
               to="/cart"
@@ -65,6 +65,16 @@ export default function Navbar() {
                   {totalItems}
                 </span>
               )}
+            </Link>
+
+            {/* Login / Sign Up Button */}
+            <Link
+              to="/login"
+              onClick={() => setMobileOpen(false)}
+              className="hidden sm:inline-flex items-center gap-1.5 bg-[#FFF5EC] text-[#111111] text-xs sm:text-sm font-bold px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl hover:bg-[#FF8A2B] hover:text-white transition"
+            >
+              <User className="w-4 h-4 text-[#FF8A2B] group-hover:text-white" />
+              <span>Login</span>
             </Link>
 
             {/* Admin Panel Button */}
@@ -123,7 +133,15 @@ export default function Navbar() {
             >
               Book a Table
             </button>
-            <div className="pt-2 border-t border-gray-100">
+            <div className="pt-2 border-t border-gray-100 space-y-2">
+              <Link
+                to="/login"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-center gap-2 w-full bg-[#FFF5EC] text-[#111111] font-bold py-3 rounded-xl hover:bg-[#FF8A2B] hover:text-white transition"
+              >
+                <User className="w-4 h-4 text-[#FF8A2B]" />
+                <span>Login / Sign Up</span>
+              </Link>
               <Link
                 to="/admin"
                 onClick={() => setMobileOpen(false)}
