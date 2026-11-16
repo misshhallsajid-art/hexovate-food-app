@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import ScrollToTop from './components/ScrollToTop'; // <-- Import here
+import ScrollToTop from './components/ScrollToTop';
+import FlashDealBanner from './components/FlashDealBanner'; // <-- Import here
 import Home from './pages/Home';
 import Menu from './pages/Menu';
 import FoodDetails from './pages/FoodDetails';
@@ -16,9 +17,10 @@ import Login from './pages/Login';
 export default function App() {
   return (
     <Router>
-      <ScrollToTop /> {/* <-- Place right inside Router */}
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col bg-white text-[#111111]">
         <Navbar />
+        <FlashDealBanner /> {/* <-- Navbar ke foran neeche patli line ki tarah show hoga */}
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
