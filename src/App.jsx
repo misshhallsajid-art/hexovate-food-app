@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -8,25 +9,43 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Confirmation from './pages/Confirmation';
 import Customization from './pages/Customization';
-import ComboBuilder from './pages/ComboBuilder'; // New Combo Builder import
-import AdminPanel from './AdminPanel';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
+function NotFound() {
+  return (
+    <div className="max-w-xl mx-auto my-16 text-center p-8 bg-surface rounded-3xl border border-line shadow-soft">
+      <h1 className="text-3xl font-black text-ink mb-2">Page not found</h1>
+      <p className="text-muted mb-5">We could not find that page.</p>
+      <Link to="/" className="text-accent font-semibold hover:underline">
+        &larr; Back to Home
+      </Link>
+    </div>
+  );
+}
 
 export default function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="flex flex-col min-h-screen bg-paper text-ink">
         <Navbar />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/menu" element={<Menu />} />
-            <Route path="/combo" element={<ComboBuilder />} />
             <Route path="/food/:id" element={<FoodDetails />} />
             <Route path="/customize/:id" element={<Customization />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/confirmation" element={<Confirmation />} />
-            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />

@@ -1,88 +1,51 @@
-import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getOrders } from '../orderStore';
-
-const STEPS = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'];
 
 export default function Confirmation() {
   const { state } = useLocation();
-  const [liveOrder, setLiveOrder] = useState(null);
-
-  useEffect(() => {
-    const syncLatestOrder = () => {
-      const orders = getOrders();
-      if (orders.length > 0) {
-        setLiveOrder(orders[0]); // Sab se latest order track karein
-      }
-    };
-
-    syncLatestOrder();
-    window.addEventListener('orderUpdated', syncLatestOrder);
-    window.addEventListener('storage', syncLatestOrder);
-    return () => {
-      window.removeEventListener('orderUpdated', syncLatestOrder);
-      window.removeEventListener('storage', syncLatestOrder);
-    };
-  }, []);
-
-  const currentStatus = liveOrder?.status || 'Pending';
-  const currentStepIndex = STEPS.indexOf(currentStatus);
+  // The reference is created once in Checkout, so it does not change on re-render.
+  const orderRef = state?.orderRef || 'HEX-DEMO';
+  const total = state?.total;
+  const items = state?.items || [];
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-12">
-      <div className="bg-surface p-8 rounded-2xl border border-line shadow-soft text-center">
-        <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
-          ✓
-        </div>
-        <h1 className="text-3xl font-black text-ink mb-2">Order Confirmed!</h1>
-        <p className="text-muted text-sm mb-6">
-          Reference ID: <span className="font-bold text-ink">{state?.orderRef || liveOrder?.id || 'HEX-DEMO'}</span>
-          {state?.total && ` • Total: $${state.total.toFixed(2)}`}
-        </p>
-
-        {/* Live Status Tracker Box */}
-        <div className="bg-soft p-6 rounded-xl border border-line text-left mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-bold text-ink text-base">Live Order Tracking</h2>
-            <span className="text-xs font-extrabold px-2.5 py-1 rounded-full bg-accent text-white">
-              {currentStatus}
-            </span>
-          </div>
-
-          {currentStatus === 'Rejected' ? (
-            <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm font-semibold">
-              ❌ Sorry, your order was declined by the restaurant.
-            </div>
-          ) : (
-            <div className="space-y-4 mt-4">
-              {STEPS.map((step, index) => {
-                const isCompleted = index <= currentStepIndex;
-                return (
-                  <div key={step} className="flex items-center gap-3">
-                    <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition ${
-                        isCompleted ? 'bg-accent text-white' : 'bg-line text-muted'
-                      }`}
-                    >
-                      {isCompleted ? '✓' : index + 1}
-                    </div>
-                    <span className={`text-sm font-semibold ${isCompleted ? 'text-ink' : 'text-muted'}`}>
-                      {step === 'Pending' ? 'Order Placed (Waiting for restaurant)' : step}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        <Link
-          to="/menu"
-          className="inline-block bg-accent text-white font-bold px-6 py-3 rounded-xl hover:opacity-90 transition"
-        >
-          Order More Food
-        </Link>
+    <div className="success-enter max-w-md mx-auto my-16 p-8 bg-surface rounded-[2rem] border border-line shadow-soft text-center">
+      <div className="w-16 h-16 bg-soft text-accent rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold" aria-hidden="true">
+        &#10003;
       </div>
+      <h1 className="text-2xl font-bold text-ink mb-2">Order placed (demo)</h1>
+      <p className="text-muted text-sm mb-4">
+        This is a demo only. No real order was placed and no payment was taken.
+      </p>
+
+      <div className="bg-soft p-4 rounded-2xl text-left text-sm mb-6 space-y-2">
+        <p className="text-muted">Order reference: <span className="font-bold text-ink">#{orderRef}</span></p>
+
+        {items.length > 0 && (
+          <ul className="border-t border-accent/30 pt-2 space-y-1">
+            {items.map((item, i) => (
+              <li key={i} className="flex justify-between gap-3 text-ink">
+                <span>
+                  {item.quantity} x {item.name} ({item.size || 'Regular'})
+                  {item.addOns?.length > 0 && (
+                    <span className="block text-xs text-muted">{item.addOns.join(', ')}</span>
+                  )}
+                </span>
+                <span className="font-semibold">${item.lineTotal.toFixed(2)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {typeof total === 'number' && (
+          <p className="text-muted border-t border-accent/30 pt-2">
+            Demo total (incl. delivery): <span className="font-bold text-ink">${total.toFixed(2)}</span>
+          </p>
+        )}
+      </div>
+
+      <Link to="/" className="block bg-accent text-white py-3.5 rounded-full font-extrabold shadow-glow hover:opacity-90 transition">
+        Back to Home
+      </Link>
     </div>
   );
 }
